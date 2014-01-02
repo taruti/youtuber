@@ -18,7 +18,6 @@ func QmlMain() error {
 
 	ctrl := &Control{}
 	engine.Context().SetVar("ctrl", ctrl)
-	engine.Context().SetVar("results", &ctrl.Results)
 
 	component, err := engine.LoadString("main", mainQml)
 	if err != nil {
@@ -81,9 +80,7 @@ func Player() chan io.ReadCloser {
 				reader.Close()
 				pipe.Close()
 			}()
-			go func() {
-				cmd.Run()
-			}()
+			go cmd.Run()
 		}
 	}()
 	return ch
@@ -117,11 +114,11 @@ ApplicationWindow {
 			y: 14
 			height: parent.height-y
 		      width: parent.width;
-		      model: results.len
+		      model: ctrl.results.len
 		      delegate: Rectangle {
 				height: 14
 				Text {
-				      text: results.text(index)
+				      text: ctrl.results.text(index)
 					MouseArea {
 						anchors.fill: parent
 						onClicked: ctrl.select(index)
